@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✍️</text></svg>">
+<title>Gerador de Copies para sites</title>
+<style>
+:root{--bg:#f5f5fa;--card:#fff;--tx:#14141f;--mu:#6b6b80;--bd:#e3e3ee;--ac:#6d5efc;--ac2:#c04dff;--in:#f0f0f7;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c0c14;--card:#15151f;--tx:#f0f0fa;--mu:#8e8ea6;--bd:#26263a;--in:#1c1c2b}}
+:root[data-theme="dark"]{--bg:#0c0c14;--card:#15151f;--tx:#f0f0fa;--mu:#8e8ea6;--bd:#26263a;--in:#1c1c2b}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+.w{max-width:920px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:30px;margin:0 0 4px;letter-spacing:-.02em;background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mu);margin:0 0 24px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:20px;margin-bottom:16px}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);margin:0 0 14px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+label{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
+input[type=text],select,textarea{width:100%;background:var(--in);border:1px solid var(--bd);border-radius:11px;padding:10px 12px;color:var(--tx);font:inherit;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--ac)}
+textarea{min-height:76px;resize:vertical}
+.full{grid-column:1/-1}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--bd);background:var(--in);color:var(--mu);padding:7px 13px;border-radius:99px;cursor:pointer;font-size:13px;user-select:none}
+.chip.on{background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff;border-color:transparent}
+.cr{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.cr input[type=color]{width:44px;height:40px;border:1px solid var(--bd);border-radius:10px;padding:2px;background:var(--in);cursor:pointer}
+.cr .hex{width:120px;font-family:ui-monospace,monospace}
+.cr .role{flex:1;min-width:0}
+.btn{border:0;border-radius:12px;padding:11px 18px;font:inherit;font-weight:600;cursor:pointer;color:#fff;background:linear-gradient(90deg,var(--ac),var(--ac2))}
+.btn.s{background:var(--in);color:var(--tx);border:1px solid var(--bd)}
+.btn:disabled{opacity:.5;cursor:wait}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+#out,.outb{white-space:pre-wrap;background:var(--in);border:1px solid var(--bd);border-radius:12px;padding:16px;max-height:560px;overflow:auto;font:13px/1.55 ui-monospace,monospace;margin-top:12px}
+.outb{white-space:pre-wrap;background:var(--in);border:1px solid var(--bd);border-radius:12px;padding:16px;max-height:560px;overflow:auto;font:13px/1.55 ui-monospace,monospace;margin-top:12px}
+.tabs{display:flex;gap:6px;background:var(--in);border:1px solid var(--bd);border-radius:14px;padding:4px;margin-bottom:18px}
+.tab{flex:1;text-align:center;padding:10px;border-radius:11px;cursor:pointer;font-weight:600;color:var(--mu);user-select:none}
+.tab.on{background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff}
+.bg{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.bc{border:1px solid var(--bd);border-radius:14px;background:var(--in);cursor:pointer;overflow:hidden}
+.bc.on{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac) inset}
+.bp{height:88px;display:flex;align-items:center;justify-content:center;background:var(--card)}
+.bl{padding:8px 10px;font-size:12px;font-weight:600;border-top:1px solid var(--bd)}
+.pv{font:600 13px system-ui,sans-serif;border:0;cursor:pointer;color:#fff;padding:10px 18px;transition:.25s;position:relative;overflow:hidden;background:var(--p1,#6d5efc)}
+.pv1{border-radius:99px;background:linear-gradient(90deg,var(--p1),var(--p3))}.pv1:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 10px 22px -6px var(--p1)}
+.pv2{border-radius:10px;box-shadow:0 4px 12px -4px #0006}.pv2:hover{transform:translateY(-3px);box-shadow:0 12px 20px -6px #0007}
+.pv3{border-radius:10px;background:transparent;color:var(--p1);box-shadow:0 0 0 2px var(--p1) inset}.pv3:hover{background:var(--p1);color:#fff}
+.pv4{background:transparent;color:var(--tx);padding:10px 4px}.pv4 i{display:inline-block;font-style:normal;transition:.25s;margin-left:6px}.pv4:hover i{transform:translateX(8px)}.pv4:hover{color:var(--p1)}
+.pv5w{width:120px;height:66px;border:2px solid var(--bd);border-radius:10px;position:relative;overflow:hidden}.pv5w b{position:absolute;left:6px;right:6px;bottom:6px;height:16px;border-radius:8px;background:var(--p1);animation:up 2s infinite}
+@keyframes up{0%,20%{transform:translateY(30px)}50%,100%{transform:none}}
+.pv6{width:50px;height:50px;border-radius:50%;background:#25d366;font-size:22px;padding:0;animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 #25d36699}100%{box-shadow:0 0 0 18px #25d36600}}
+.pv7{border-radius:12px;transition:transform .15s}
+.pv8{border-radius:10px}.pv8:after{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(100deg,transparent,#fff8,transparent);transform:skewX(-20deg);animation:sh 2.2s infinite}
+@keyframes sh{to{left:140%}}
+.bp{position:relative}.bgf{position:absolute;inset:0}.pv{z-index:1}
+.pv9{border-radius:14px;background:var(--in);color:var(--tx);box-shadow:5px 5px 10px #0003,-5px -5px 10px #ffffff1f}.pv9:hover{box-shadow:inset 4px 4px 8px #0003,inset -4px -4px 8px #ffffff1f}
+.pv10{border-radius:12px;background:#ffffff33;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid #ffffff77}.pv10:hover{background:#ffffff55;transform:translateY(-2px)}
+.pv11{border-radius:10px;background:linear-gradient(90deg,var(--p1),var(--p3),var(--p1));background-size:200% 100%;animation:gs 3s linear infinite}@keyframes gs{to{background-position:200% 0}}
+.pv12{border-radius:99px;border:2px solid transparent;color:var(--tx);background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(90deg,var(--p1),var(--p3)) border-box}.pv12:hover{background:linear-gradient(90deg,var(--p1),var(--p3)) border-box;color:#fff}
+.pv13{border-radius:10px}.pv13 span{display:inline-block;margin-right:6px}.pv13:hover span{animation:wig .5s}@keyframes wig{25%{transform:rotate(-20deg)}75%{transform:rotate(20deg)}}
+.pv14{border-radius:10px}.rp{position:absolute;width:40px;height:40px;margin:-20px;border-radius:50%;background:#fff7;transform:scale(0);animation:rp .6s;pointer-events:none}@keyframes rp{to{transform:scale(5);opacity:0}}
+.pv15{border-radius:10px;box-shadow:0 5px 0 #0006}.pv15:hover{transform:translateY(-1px)}.pv15:active{transform:translateY(4px);box-shadow:0 1px 0 #0006}
+.pv16{border-radius:99px;display:flex;align-items:center;gap:10px;padding:6px 6px 6px 18px}.pv16 b{width:26px;height:26px;border-radius:50%;background:#fff;color:var(--p1);display:grid;place-items:center;transition:.25s}.pv16:hover b{transform:rotate(-45deg)}
+.pv17{border-radius:10px;background:transparent;color:var(--p1);box-shadow:0 0 0 2px var(--p1) inset}.pv17:before{content:"";position:absolute;inset:0;background:var(--p1);transform:translateX(-101%);transition:.3s;z-index:-1}.pv17:hover:before{transform:none}.pv17:hover{color:#fff}
+.pv18{border-radius:10px;background:transparent;color:var(--p1);border:2px solid var(--p1);text-shadow:0 0 8px var(--p1);box-shadow:0 0 12px var(--p1)}.pv18:hover{background:var(--p1);color:#fff;box-shadow:0 0 26px var(--p1)}
+.err{color:#e5484d;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="w">
+<h1>Gerador de Copies para sites</h1>
+<p class="sub">Preencha o briefing do cliente, gere o prompt da copy e depois o prompt final para o Claude Code.</p>
+<div class="tabs"><div class="tab on" id="t1">✍️ 1 · Copy</div><div class="tab" id="t2">🎨 2 · Design e prompt</div></div>
+<div id="tab1">
+<div class="card"><h2>1 · Tipo de site</h2>
+<div class="chips" id="types"></div>
+<h2 style="margin-top:18px">Seções (toque para ativar/desativar)</h2>
+<div class="chips" id="secs"></div>
+<div class="row" style="margin-top:12px"><input type="text" id="extraSec" placeholder="Adicionar seção personalizada" style="max-width:280px"><button class="btn s" id="addSec">Adicionar</button></div>
+</div>
+
+<div class="card"><h2>2 · Briefing do cliente</h2>
+<div class="g">
+<div><label>Nome do cliente / marca</label><input type="text" id="nome"></div>
+<div><label>Segmento</label><input type="text" id="seg" placeholder="Ex.: clínica estética"></div>
+<div><label>Cidade / região de atuação</label><input type="text" id="cid"></div>
+<div><label>Tom de voz</label><select id="tom"><option>Profissional e confiável</option><option>Próximo e acolhedor</option><option>Moderno e descontraído</option><option>Premium e sofisticado</option><option>Direto e persuasivo</option><option>Técnico e autoridade</option></select></div>
+<div class="full"><label>Objetivo do site</label><textarea id="obj" placeholder="Ex.: gerar agendamentos via WhatsApp"></textarea></div>
+<div class="full"><label>Público-alvo</label><textarea id="pub"></textarea></div>
+<div class="full"><label>Serviços / produtos</label><textarea id="serv"></textarea></div>
+<div class="full"><label>Diferenciais e provas (tempo de mercado, números, certificações, depoimentos)</label><textarea id="dif"></textarea></div>
+<div><label>Chamada para ação principal (CTA)</label><input type="text" id="cta" placeholder="Ex.: Agendar avaliação"></div>
+<div><label>Contatos (WhatsApp, e-mail, endereço, redes)</label><input type="text" id="cont"></div>
+<div class="full"><label>Observações extras</label><textarea id="obs"></textarea></div>
+</div></div>
+
+<div class="card"><h2>3 · Identidade visual</h2>
+<label>Paleta de cores (escolha no seletor ou cole o código HEX)</label>
+<div id="pal"></div>
+<button class="btn s" id="addCor">+ Adicionar cor</button>
+<div class="g" style="margin-top:16px">
+<div><label>Fonte de títulos</label><input type="text" id="f1" placeholder="Ex.: Poppins"></div>
+<div><label>Fonte de texto</label><input type="text" id="f2" placeholder="Ex.: Inter"></div>
+<div class="full"><label>Referências de sites / estilo visual (links ou descrição)</label><textarea id="ref"></textarea></div>
+</div></div>
+
+<div class="row"><button class="btn" id="gen">✨ Gerar prompt de copy</button><span id="st" style="color:var(--mu)"></span></div>
+<div id="err" class="err"></div>
+
+<div class="card" id="res" style="display:none;margin-top:16px"><h2>Prompt de copy · cole no Claude (chat) para gerar a copy</h2>
+<div class="row"><button class="btn s" id="cp">Copiar</button><button class="btn s" id="dl">Baixar .md</button></div>
+<div id="out"></div></div>
+</div>
+<div id="tab2" style="display:none">
+<div class="card"><h2>Informações puxadas da aba Copy</h2><div id="sum"></div><div class="row" style="margin-top:12px"><button class="btn s" id="back">← Editar briefing / gerar copy</button></div></div>
+<div class="card"><h2>Direção de design e animações</h2>
+<p class="sub" style="margin:0 0 12px;font-size:13px">★ = padrão que mais funciona no mercado para o tipo de site escolhido (já pré-selecionado). Ajuste como quiser.</p>
+<div id="tip" style="background:var(--in);border:1px solid var(--bd);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:13px"></div>
+<div class="g" style="margin-bottom:14px">
+<div><label>Estilo geral</label><select id="est"><option>Minimalista moderno</option><option>Dark premium</option><option>Clean corporativo</option><option>Ousado e vibrante</option><option>Editorial / tipográfico</option><option>Suave e acolhedor</option></select></div>
+<div class="full"><label>Stack / forma de criação</label><select id="stk"><option>HTML + CSS + JS puro</option><option>Blocos HTML separados (Elementor)</option><option>Arquivo HTML único</option><option>React + Vite + Tailwind</option><option>Next.js + Tailwind</option><option>WordPress: tema/plugin customizado</option></select><div id="stkd" style="font-size:13px;color:var(--mu);margin-top:6px"></div></div></div>
+<label>Botões · passe o mouse para ver o efeito, toque para selecionar</label><div class="bg" id="dB" style="margin-bottom:14px"></div>
+<label>Animações e interações</label><div class="chips" id="dA" style="margin-bottom:12px"></div>
+<label>Layout e componentes</label><div class="chips" id="dL"></div>
+</div>
+
+<div class="card"><h2>Copy pronta (opcional)</h2><textarea id="pasted" placeholder="Cole aqui a copy que o Claude gerou. Ela será anexada ao prompt do site. Se deixar vazio, o Claude Code escreve a copy."></textarea></div>
+<div class="row"><button class="btn" id="genP">🚀 Gerar prompt do site</button><span id="st2" style="color:var(--mu)"></span></div>
+<div id="err2" class="err"></div>
+<div class="card" id="res2" style="display:none;margin-top:16px"><h2>Prompt para criar a página · Claude Code</h2>
+<div class="row"><button class="btn s" id="cp2">Copiar</button><button class="btn s" id="dl2">Baixar .md</button></div>
+<div id="out2" class="outb"></div></div>
+</div></div>
+
+<script>
+const T={"Landing page":["Hero (promessa + CTA)","Problema / dor","Solução","Benefícios","Como funciona","Prova social","Oferta","FAQ","CTA final"],
+"Site institucional":["Hero","Sobre nós","Missão, visão e valores","Serviços","Diferenciais","Equipe","Depoimentos","Cases / portfólio","Contato"],
+"Página de vendas":["Hero + promessa","Dor","Agitação do problema","Apresentação da solução","O que está incluso","Bônus","Depoimentos","Garantia","Preço e oferta","FAQ","CTA final"],
+"Clínica / serviços":["Hero","Serviços / tratamentos","Sobre o profissional","Diferenciais","Resultados","Depoimentos","FAQ","Agendamento","Localização"],
+"E-commerce":["Banner principal","Categorias","Produtos em destaque","Benefícios (frete, pagamento)","Prova social","Newsletter","Rodapé"],
+"Portfólio":["Hero","Sobre","Projetos","Serviços","Processo de trabalho","Depoimentos","Contato"],
+"Evento":["Hero + data e local","Sobre o evento","Programação","Atrações","Ingressos","Patrocinadores","FAQ","Local e como chegar"]};
+const $=id=>document.getElementById(id);
+let type="Landing page",secs=new Set(),custom=[];
+const ROLES=["Primária","Secundária","Destaque","Fundo","Texto"];
+function drawTypes(){$("types").innerHTML="";Object.keys(T).forEach(k=>{const c=el("chip"+(k===type?" on":""),k);c.onclick=()=>{type=k;secs=new Set(T[k]);custom=[];drawTypes();drawSecs();resetD()};$("types").append(c)})}
+function drawSecs(){$("secs").innerHTML="";[...T[type],...custom].forEach(s=>{const c=el("chip"+(secs.has(s)?" on":""),s);c.onclick=()=>{secs.has(s)?secs.delete(s):secs.add(s);drawSecs()};$("secs").append(c)})}
+function el(cl,t){const d=document.createElement("div");d.className=cl;d.textContent=t;return d}
+$("addSec").onclick=()=>{const v=$("extraSec").value.trim();if(v){custom.push(v);secs.add(v);$("extraSec").value="";drawSecs()}};
+const okHex=v=>/^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v.trim());
+const norm=v=>{v=v.trim().replace("#","");if(v.length===3)v=[...v].map(x=>x+x).join("");return"#"+v.toUpperCase()};
+function addCor(hex,role){const r=document.createElement("div");r.className="cr";
+r.innerHTML='<input type="color"><input type="text" class="hex" maxlength="7" placeholder="#000000"><input type="text" class="role" placeholder="Função (ex.: Primária)"><button class="btn s" style="padding:8px 12px">✕</button>';
+const [c,h,ro,x]=r.children;c.value=hex;h.value=hex.toUpperCase();ro.value=role||"";
+c.oninput=()=>h.value=c.value.toUpperCase();
+h.oninput=()=>{if(okHex(h.value)){const n=norm(h.value);c.value=n.toLowerCase();h.style.outline=""}else h.style.outline="1px solid #e5484d"};
+h.onblur=()=>{if(okHex(h.value))h.value=norm(h.value)};
+x.onclick=()=>r.remove();$("pal").append(r)}
+$("addCor").onclick=()=>addCor("#6d5efc",ROLES[$("pal").children.length]||"");
+["#6d5efc","#1a1a2e","#c04dff"].forEach((c,i)=>addCor(c,ROLES[i]));
+function briefing(){const v=id=>$(id).value.trim()||"(não informado)";
+const cores=[...$("pal").children].map(r=>{const[c,h,ro]=r.children;return`- ${okHex(h.value)?norm(h.value):c.value.toUpperCase()}${ro.value?" — "+ro.value:""}`}).join("\n");
+return`Tipo de site: ${type}
+Seções (na ordem): ${[...T[type],...custom].filter(s=>secs.has(s)).join(" → ")}
+Cliente/marca: ${v("nome")}
+Segmento: ${v("seg")}
+Cidade/região: ${v("cid")}
+Tom de voz: ${$("tom").value}
+Objetivo: ${v("obj")}
+Público-alvo: ${v("pub")}
+Serviços/produtos: ${v("serv")}
+Diferenciais e provas: ${v("dif")}
+CTA principal: ${v("cta")}
+Contatos: ${v("cont")}
+Observações: ${v("obs")}
+Paleta de cores:
+${cores}
+Fonte de títulos: ${v("f1")}
+Fonte de texto: ${v("f2")}
+Referências visuais: ${v("ref")}`}
+const SYS=`Você é um redator publicitário sênior e diretor de conteúdo web. Com base no briefing abaixo, gere em português do Brasil um DOCUMENTO EM MARKDOWN pronto para ser colado no Claude Code, que irá desenvolver o site. Estrutura obrigatória:
+# Projeto: [nome] — [tipo de site]
+1. Instruções para o Claude Code (stack sugerida: HTML/CSS/JS responsivo, mobile-first, acessibilidade, SEO, performance, animações sutis).
+2. Design system: paleta com todos os HEX e função de cada cor, fontes, estilo visual e referências.
+3. SEO: title (até 60 caracteres), meta description (até 155) e palavras-chave.
+4. Copy por seção, na ordem indicada e apenas as seções listadas. Para cada seção: nome, objetivo, título (H1/H2), subtítulo, corpo do texto, itens/listas quando fizer sentido, texto dos botões e sugestão de layout/elemento visual.
+Regras: copy persuasiva, específica ao segmento, no tom de voz pedido, sem inventar dados, números ou depoimentos que não estejam no briefing (use [PREENCHER] quando faltar). Responda somente com o documento.`;
+let txt="";
+$("gen").onclick=()=>{$("err").textContent="";if(!secs.size){$("err").textContent="Selecione ao menos uma seção.";return}
+txt=SYS+"\n\nBRIEFING:\n"+briefing();show();$("st").textContent="Prompt pronto ✓ — cole no Claude (chat) para gerar a copy"};
+function show(){$("res").style.display="block";$("out").textContent=txt;$("res").scrollIntoView({behavior:"smooth"})}
+$("cp").onclick=async()=>{try{await navigator.clipboard.writeText(txt);$("cp").textContent="Copiado ✓"}catch(e){const r=document.createRange();r.selectNodeContents($("out"));getSelection().removeAllRanges();getSelection().addRange(r);$("cp").textContent="Selecionado — Ctrl+C"}setTimeout(()=>$("cp").textContent="Copiar",2000)};
+$("dl").onclick=async()=>{try{const d=await claude.use("downloads");if(!d)throw 0;await d.save({filename:"copy-site.md",data:txt})}catch(e){$("err").textContent="Download indisponível aqui — use o botão Copiar."}};
+
+const D={B:["Pill arredondado com gradiente","Sólido com sombra suave","Outline com hover preenchido","Ghost com seta animada","CTA fixo no mobile (sticky)","Botão flutuante de WhatsApp","Botão magnético (segue o cursor)","Botão com brilho/shine no hover"],
+A:["Scroll reveal (fade-in ao rolar)","Texto do hero com stagger","Contadores animados","Parallax sutil","Hover lift em cards","Marquee de logos","Carrossel de depoimentos","Accordion suave no FAQ","Barra de progresso de scroll","Vídeo de fundo no hero","Cursor customizado","Micro-interações em botões","Contagem regressiva (countdown)","Antes/depois com slider"],
+L:["Hero split (texto + imagem)","Hero centralizado","Hero com vídeo","Bento grid","Cards com glassmorphism","Timeline vertical","Seções alternadas","Navbar sticky com blur","Grid de produtos com quick-view","Galeria em masonry","Formulário curto no hero","Rodapé completo com CTA"]};
+const R={"Landing page":["Pill arredondado com gradiente","CTA fixo no mobile (sticky)","Botão flutuante de WhatsApp","Scroll reveal (fade-in ao rolar)","Texto do hero com stagger","Accordion suave no FAQ","Micro-interações em botões","Hero split (texto + imagem)","Formulário curto no hero"],
+"Site institucional":["Sólido com sombra suave","Ghost com seta animada","Scroll reveal (fade-in ao rolar)","Contadores animados","Marquee de logos","Hover lift em cards","Navbar sticky com blur","Hero centralizado","Seções alternadas"],
+"Página de vendas":["Pill arredondado com gradiente","Botão com brilho/shine no hover","CTA fixo no mobile (sticky)","Contagem regressiva (countdown)","Scroll reveal (fade-in ao rolar)","Carrossel de depoimentos","Accordion suave no FAQ","Barra de progresso de scroll","Hero split (texto + imagem)"],
+"Clínica / serviços":["Sólido com sombra suave","Botão flutuante de WhatsApp","Antes/depois com slider","Scroll reveal (fade-in ao rolar)","Carrossel de depoimentos","Hover lift em cards","Cards com glassmorphism","Hero split (texto + imagem)","Navbar sticky com blur"],
+"E-commerce":["Sólido com sombra suave","CTA fixo no mobile (sticky)","Hover lift em cards","Micro-interações em botões","Marquee de logos","Grid de produtos com quick-view","Navbar sticky com blur","Rodapé completo com CTA"],
+"Portfólio":["Outline com hover preenchido","Botão magnético (segue o cursor)","Cursor customizado","Parallax sutil","Texto do hero com stagger","Scroll reveal (fade-in ao rolar)","Galeria em masonry","Bento grid","Hero centralizado"],
+"Evento":["Pill arredondado com gradiente","Botão com brilho/shine no hover","Contagem regressiva (countdown)","Vídeo de fundo no hero","Parallax sutil","Marquee de logos","Scroll reveal (fade-in ao rolar)","Hero com vídeo","Timeline vertical"]};
+const TIP={"Landing page":"Uma única meta de conversão: 1 CTA repetido ao longo da página, formulário curto e prova social perto do CTA.","Site institucional":"Foco em credibilidade: navegação clara, números de autoridade, cases e contato sempre acessível.","Página de vendas":"Storytelling longo com CTAs repetidos, urgência real (prazo/vagas), garantia visível e FAQ para quebrar objeções.","Clínica / serviços":"Confiança e acolhimento: WhatsApp sempre à mão, antes/depois (respeitando normas do conselho), depoimentos e profissional em destaque.","E-commerce":"Velocidade e clareza: grid limpo, benefícios de frete/pagamento no topo, CTA de compra fixo no mobile.","Portfólio":"Deixe o trabalho falar: interações com personalidade, transições suaves e poucos elementos concorrendo com os projetos.","Evento":"Urgência e emoção: data/local no hero, countdown, vídeo/imagem imersiva e CTA de ingresso sempre visível."};
+D.B.push("Neumórfico (relevo suave)","Glassmorphism (vidro fosco)","Gradiente animado (loop)","Borda gradiente com hover","Ícone + texto (WhatsApp/telefone)","Ripple ao clicar","Botão 3D (afunda ao clicar)","Split (texto + seta em círculo)","Preenchimento deslizante no hover","Neon glow");
+R["Landing page"].push("Gradiente animado (loop)");R["Site institucional"].push("Preenchimento deslizante no hover");R["Página de vendas"].push("Botão 3D (afunda ao clicar)","Gradiente animado (loop)");R["Clínica / serviços"].push("Ícone + texto (WhatsApp/telefone)");R["E-commerce"].push("Botão 3D (afunda ao clicar)","Ripple ao clicar");R["Portfólio"].push("Split (texto + seta em círculo)","Borda gradiente com hover");R["Evento"].push("Neon glow","Gradiente animado (loop)");
+const STK={"HTML + CSS + JS puro":"Ideal para criar tudo junto: site completo numa pasta simples (index.html, style.css, script.js), fácil de hospedar em qualquer lugar.","Blocos HTML separados (Elementor)":"Ideal para usar no Elementor de forma separada: cada seção vira um bloco independente (HTML + CSS + JS com estilos isolados) para colar no widget HTML de cada seção.","Arquivo HTML único":"Ideal para protótipo rápido ou aprovação com o cliente: tudo em um só arquivo, sem dependências.","React + Vite + Tailwind":"Ideal para sites com componentes reutilizáveis e mais interatividade; exige build e hospedagem estática (Vercel, Netlify).","Next.js + Tailwind":"Ideal para SEO forte, várias páginas ou blog e projetos que vão crescer; roda melhor em Vercel.","WordPress: tema/plugin customizado":"Ideal para clientes que vão editar o conteúdo sozinhos no painel do WordPress, com tema próprio e campos editáveis."};
+let sel=new Set();
+const bgf=c=>'<div class="bgf" style="background:'+c+'"></div>';
+const PV={"Pill arredondado com gradiente":'<button class="pv pv1">Quero agora</button>',
+"Sólido com sombra suave":'<button class="pv pv2">Saiba mais</button>',
+"Outline com hover preenchido":'<button class="pv pv3">Ver serviços</button>',
+"Ghost com seta animada":'<button class="pv pv4">Conhecer <i>→</i></button>',
+"CTA fixo no mobile (sticky)":'<div class="pv5w"><b></b></div>',
+"Botão flutuante de WhatsApp":'<button class="pv pv6">💬</button>',
+"Botão magnético (segue o cursor)":'<button class="pv pv7" data-m="1">Falar agora</button>',
+"Botão com brilho/shine no hover":'<button class="pv pv8">Comprar</button>'};
+PV["Neumórfico (relevo suave)"]='<button class="pv pv9">Agendar</button>';
+PV["Glassmorphism (vidro fosco)"]=bgf("linear-gradient(135deg,var(--p1),var(--p3))")+'<button class="pv pv10">Começar</button>';
+PV["Gradiente animado (loop)"]='<button class="pv pv11">Quero o meu</button>';
+PV["Borda gradiente com hover"]='<button class="pv pv12">Ver planos</button>';
+PV["Ícone + texto (WhatsApp/telefone)"]='<button class="pv pv13"><span>📞</span>Ligar agora</button>';
+PV["Ripple ao clicar"]='<button class="pv pv14" data-r="1">Clique aqui</button>';
+PV["Botão 3D (afunda ao clicar)"]='<button class="pv pv15">Garantir vaga</button>';
+PV["Split (texto + seta em círculo)"]='<button class="pv pv16">Começar <b>→</b></button>';
+PV["Preenchimento deslizante no hover"]='<button class="pv pv17"><span style="position:relative">Ver mais</span></button>';
+PV["Neon glow"]=bgf("#0b0b14")+'<button class="pv pv18">Entrar</button>';
+document.addEventListener("click",e=>{const b=e.target.closest("[data-r]");if(!b)return;const r=b.getBoundingClientRect(),d=document.createElement("span");d.className="rp";d.style.left=(e.clientX-r.left)+"px";d.style.top=(e.clientY-r.top)+"px";b.append(d);setTimeout(()=>d.remove(),650)});
+function drawD(){setP();$("stkd").textContent=STK[$("stk").value];
+$("dB").innerHTML="";D.B.forEach(i=>{const rec=R[type].includes(i);const c=document.createElement("div");c.className="bc"+(sel.has(i)?" on":"");c.innerHTML='<div class="bp">'+PV[i]+'</div><div class="bl">'+(rec?"★ ":"")+i+'</div>';c.onclick=()=>{sel.has(i)?sel.delete(i):sel.add(i);c.classList.toggle("on")};
+const m=c.querySelector("[data-m]");if(m){const bp=c.querySelector(".bp");bp.onmousemove=e=>{const r=m.getBoundingClientRect();m.style.transform="translate("+(e.clientX-r.left-r.width/2)*.35+"px,"+(e.clientY-r.top-r.height/2)*.35+"px)"};bp.onmouseleave=()=>m.style.transform=""}
+$("dB").append(c)});
+[["dA","A"],["dL","L"]].forEach(([id,k])=>{$(id).innerHTML="";D[k].forEach(i=>{const rec=R[type].includes(i);const c=el("chip"+(sel.has(i)?" on":""),(rec?"★ ":"")+i);c.onclick=()=>{sel.has(i)?sel.delete(i):sel.add(i);drawD()};$(id).append(c)})});$("tip").textContent="💡 "+TIP[type]}
+function hexOf(r){const[c,h]=r.children;return okHex(h.value)?norm(h.value):c.value}
+function setP(){const rs=[...$("pal").children].map(hexOf),st=document.documentElement.style;st.setProperty("--p1",rs[0]||"#6d5efc");st.setProperty("--p3",rs[2]||rs[1]||rs[0]||"#c04dff")}
+function summ(){const v=id=>$(id).value.trim()||"—";const sw=[...$("pal").children].map(r=>'<span style="display:inline-block;width:18px;height:18px;border-radius:6px;background:'+hexOf(r)+';border:1px solid var(--bd);vertical-align:middle;margin-right:4px"></span>').join("");
+$("sum").innerHTML='<div><b>'+v("nome")+'</b> · '+type+' · '+v("seg")+'</div><div style="color:var(--mu);font-size:13px;margin:4px 0">Tom: '+$("tom").value+' · '+secs.size+' seções · CTA: '+v("cta")+'</div><div>'+sw+'</div><div style="margin-top:8px;font-size:13px">'+($("pasted").value.trim()?"✅ Copy colada — será anexada ao prompt.":"ℹ️ Sem copy colada — o Claude Code escreverá a copy junto com o site.")+'</div>'}
+function tab(n){$("tab1").style.display=n==1?"":"none";$("tab2").style.display=n==2?"":"none";$("t1").className="tab"+(n==1?" on":"");$("t2").className="tab"+(n==2?" on":"");if(n==2){summ();drawD()}scrollTo(0,0)}
+$("stk").onchange=()=>$("stkd").textContent=STK[$("stk").value];$("t1").onclick=()=>tab(1);$("t2").onclick=()=>tab(2);$("back").onclick=()=>tab(1);
+function resetD(){sel=new Set(R[type]);drawD()}
+const SYS2=`Você é um diretor de arte e engenheiro front-end sênior. Com base no briefing e nas escolhas de design abaixo, escreva em português do Brasil um PROMPT COMPLETO e direto para ser colado no Claude Code, que criará o site do zero. O prompt deve conter: (1) contexto do projeto e objetivo de conversão; (2) stack e estrutura de arquivos (respeite a descrição da stack escolhida; para Elementor, cada seção deve ser um bloco HTML/CSS/JS independente, com CSS escopado por uma classe única, para colar em widgets HTML separados); (3) design system (paleta com HEX e uso de cada cor, tipografia, espaçamento, bordas, sombras); (4) especificação dos botões escolhidos (estados normal/hover/focus/active, tamanhos); (5) animações e interações escolhidas, com detalhes de implementação (duração, easing, gatilho) e respeito a prefers-reduced-motion; (6) layout de cada seção na ordem indicada, com os componentes; (7) requisitos de responsividade mobile-first, acessibilidade, SEO e performance (Core Web Vitals); (8) critérios de aceite. Complemente com boas práticas que comprovadamente funcionam no mercado para este tipo de site, sem contradizer as escolhas do usuário. Mencione que a copy final está em anexo e deve ser usada literalmente. Responda somente com o prompt.`;
+let txt2="";
+function designTxt(){const g=k=>D[k].filter(i=>sel.has(i)).join("; ")||"(a critério do diretor de arte)";return`\nDIREÇÃO DE DESIGN\nEstilo geral: ${$("est").value}\nStack: ${$("stk").value} — ${STK[$("stk").value]}\nBotões: ${g("B")}\nAnimações e interações: ${g("A")}\nLayout e componentes: ${g("L")}`}
+const SYS3=`Você é um diretor de arte e engenheiro front-end sênior. Crie do zero o site descrito abaixo. Entregue: estrutura de arquivos conforme a stack escolhida (respeite a descrição dela; para Elementor, cada seção deve ser um bloco HTML/CSS/JS independente, com CSS escopado por classe única); design system com a paleta HEX informada e tipografia; os botões, animações e layouts escolhidos, com estados hover/focus/active e respeito a prefers-reduced-motion; seções na ordem indicada; mobile-first, acessível, SEO e Core Web Vitals. Complemente com boas práticas que funcionam no mercado para este tipo de site, sem contradizer as escolhas. Use a copy fornecida literalmente; se não houver copy, escreva você mesmo a copy de cada seção em português do Brasil, persuasiva, no tom pedido, sem inventar dados (use [PREENCHER] quando faltar).`;
+$("genP").onclick=()=>{$("err2").textContent="";if(!secs.size){$("err2").textContent="Selecione ao menos uma seção na aba Copy.";return}
+const pc=$("pasted").value.trim();
+txt2=SYS3+"\n\nBRIEFING:\n"+briefing()+designTxt()+(pc?"\n\n---\n# COPY FINAL (usar literalmente)\n\n"+pc:"");
+$("res2").style.display="block";$("out2").textContent=txt2;$("st2").textContent="Prompt pronto ✓ — cole no Claude Code";$("res2").scrollIntoView({behavior:"smooth"})};
+$("cp2").onclick=async()=>{try{await navigator.clipboard.writeText(txt2);$("cp2").textContent="Copiado ✓"}catch(e){$("cp2").textContent="Selecione e Ctrl+C"}setTimeout(()=>$("cp2").textContent="Copiar",2000)};
+$("dl2").onclick=async()=>{try{const d=await claude.use("downloads");if(!d)throw 0;await d.save({filename:"prompt-site.md",data:txt2})}catch(e){$("err2").textContent="Download indisponível aqui — use Copiar."}};
+secs=new Set(T[type]);drawTypes();drawSecs();resetD();
+</script>
+</body>
+</html>
